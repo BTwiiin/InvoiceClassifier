@@ -1,0 +1,7 @@
+opencv-python
+numpy
+easyocr
+joblib
+scikit-learn
+pandas
+json
