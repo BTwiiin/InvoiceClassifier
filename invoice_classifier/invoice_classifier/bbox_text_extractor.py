@@ -7,8 +7,8 @@ def extract_bounding_boxes_text(image_path):
         image_path,
         paragraph=True,
         decoder='wordbeamsearch',
-        x_ths=0.8,
-        y_ths=0.3 
+        x_ths=1,
+        y_ths=0.5 
     )
 
     bboxes = [json.dumps(result[0]) for result in results]

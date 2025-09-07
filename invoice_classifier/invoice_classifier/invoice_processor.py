@@ -14,7 +14,7 @@ class InvoiceProcessor:
         self.scaler = load(scaler_path)
         self.vectorizer = load(vectorizer_path)
 
-    def process_invoice(self, image_path, draw_bboxes=0):
+    def process_invoice(self, image_path, draw_bboxes=0, draw_text=False):
         qr_data, qr_bbox = detect_qr_code(image_path)
 
         if not qr_data:
@@ -26,7 +26,7 @@ class InvoiceProcessor:
         print(f"Extracted Text: {texts}")
 
         if draw_bboxes == 1:
-            self.__draw_bbox(image_path, bboxes, texts)
+            self.__draw_bbox(image_path, bboxes, texts, draw_text)
 
         features = self.prepare_features(texts, bboxes)
 
@@ -48,7 +48,7 @@ class InvoiceProcessor:
 
         return combined_embeddings_sparse
     
-    def __draw_bbox(self, image_path, bboxes, texts):
+    def __draw_bbox(self, image_path, bboxes, texts, draw_text=False):
         image = cv2.imread(image_path)
 
         # Iterate through bounding boxes and corresponding texts
@@ -62,7 +62,8 @@ class InvoiceProcessor:
 
                 # Draw the bounding box and the corresponding text on the image
                 cv2.polylines(image, [np.array(pts)], isClosed=True, color=(0, 255, 0), thickness=2)
-                cv2.putText(image, text[:30], (pts[0][0], pts[0][1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+                if draw_text and isinstance(text, str) and text.strip():
+                    cv2.putText(image, text[:30], (pts[0][0], pts[0][1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
             
             except json.JSONDecodeError:
                 print(f"Error parsing bbox: {bbox_str}")

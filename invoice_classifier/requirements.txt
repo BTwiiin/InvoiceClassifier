@@ -4,4 +4,4 @@ easyocr
 joblib
 scikit-learn
 pandas
-json
+xgboost
